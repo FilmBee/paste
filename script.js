@@ -1,4 +1,4 @@
-// Check the initial state of the dark mode toggle and apply the class accordingly
+// Apply dark mode on page load
 document.addEventListener("DOMContentLoaded", function() {
   var darkModeToggle = document.getElementById("dark-mode-toggle");
   var body = document.body;
@@ -10,33 +10,30 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 });
 
+// Save the file directly without browser prompt
 document.getElementById("save-button").addEventListener("click", function() {
   var text = document.getElementById("text-input").value;
+  var filename = document.getElementById("file-name-input").value;
 
-  // Prompt the user for the desired file name
-  var filename = prompt("Enter a file name", "paste.txt");
-  if (filename === null || filename.trim() === "") {
-    return; // Cancelled or empty file name, do nothing
+  if (filename.trim() === "") {
+    alert("Please enter a valid file name.");
+    return;
   }
 
-  // Create a Blob object with the text content
-  var blob = new Blob([text], { type: "text/plain" });
+  var element = document.createElement("a");
+  element.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(text));
+  element.setAttribute("download", filename);
 
-  // Create a temporary <a> element to generate the download link
-  var link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  link.download = filename;
+  element.style.display = "none";
+  document.body.appendChild(element);
 
-  // Append the link to the page
-  document.body.appendChild(link);
+  element.click();
 
-  // Trigger a click event to initiate the download
-  link.click();
-
-  // Remove the temporary link from the page
-  document.body.removeChild(link);
+  document.body.removeChild(element);
 });
 
+// Toggle dark mode
 document.getElementById("dark-mode-toggle").addEventListener("change", function() {
-  document.body.classList.toggle("dark-mode");
+  var body = document.body;
+  body.classList.toggle("dark-mode");
 });
