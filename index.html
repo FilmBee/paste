@@ -2,19 +2,70 @@
 <html>
 <head>
   <title>Paste Bin</title>
-  <link rel="stylesheet" type="text/css" href="styles.css">
+  <style>
+    /* Styles for dark mode */
+    :root {
+      --background-color: #fff;
+      --text-color: #000;
+    }
+
+    body.dark-mode {
+      --background-color: #222;
+      --text-color: #fff;
+    }
+
+    body {
+      background-color: var(--background-color);
+      color: var(--text-color);
+      padding: 20px;
+    }
+
+    label, input {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .toggle-label {
+      margin-top: 15px;
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Paste Bin</h1>
-    <textarea id="text-input" placeholder="Enter your text here"></textarea>
-    <button id="save-button">Save</button>
-    <div id="link-container" style="display: none;">
-      <h2>Your paste link:</h2>
-      <input type="text" id="link-input" readonly>
-    </div>
-  </div>
+  <h1>Paste Bin</h1>
+  <label for="text-input">Text:</label>
+  <textarea id="text-input" rows="10" cols="50"></textarea>
+  <label for="file-name-input">File Name:</label>
+  <input type="text" id="file-name-input" placeholder="Enter a file name">
+  <button id="save-button">Save</button>
 
-  <script src="script.js"></script>
+  <label class="toggle-label">
+    <input type="checkbox" id="dark-mode-toggle">
+    Dark Mode
+  </label>
+
+  <script>
+    document.getElementById('save-button').addEventListener('click', function() {
+      var text = document.getElementById('text-input').value;
+      var filename = document.getElementById('file-name-input').value;
+
+      if (filename.trim() === "") {
+        alert("Please enter a valid file name.");
+        return;
+      }
+
+      var blob = new Blob([text], { type: 'text/plain' });
+      var link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = filename;
+
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+
+    document.getElementById('dark-mode-toggle').addEventListener('change', function() {
+      document.body.classList.toggle('dark-mode');
+    });
+  </script>
 </body>
 </html>
