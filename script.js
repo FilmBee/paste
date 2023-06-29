@@ -1,95 +1,42 @@
-/* Reset styles */
-html, body, h1, h2, h3, h4, h5, h6, p, blockquote, pre, code, ul, ol, li, dl, dt, dd, img, iframe, em, strong, sub, sup, small, mark, del, ins, strike, s, u, a, var, b, i, center, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  font-size: 100%;
-  font: inherit;
-  vertical-align: baseline;
-}
+// Check the initial state of the dark mode toggle and apply the class accordingly
+document.addEventListener("DOMContentLoaded", function() {
+  var darkModeToggle = document.getElementById("dark-mode-toggle");
+  var body = document.body;
+  
+  if (darkModeToggle.checked) {
+    body.classList.add("dark-mode");
+  } else {
+    body.classList.remove("dark-mode");
+  }
+});
 
-/* Global styles */
-body {
-  font-family: 'Courier New', Courier, monospace;
-  background-color: #222;
-  color: #fff;
-  padding: 20px;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
+document.getElementById("save-button").addEventListener("click", function() {
+  var text = document.getElementById("text-input").value;
 
-h1 {
-  margin-bottom: 20px;
-}
+  // Prompt the user for the desired file name
+  var filename = prompt("Enter a file name", "paste.txt");
+  if (filename === null || filename.trim() === "") {
+    return; // Cancelled or empty file name, do nothing
+  }
 
-label {
-  font-weight: bold;
-}
+  // Create a Blob object with the text content
+  var blob = new Blob([text], { type: "text/plain" });
 
-textarea {
-  width: 100%;
-  min-height: 150px;
-  resize: vertical;
-  font-family: 'Courier New', Courier, monospace;
-  padding: 10px;
-}
+  // Create a temporary <a> element to generate the download link
+  var link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = filename;
 
-input[type="text"],
-button {
-  display: block;
-  width: 100%;
-  padding: 10px;
-  font-family: 'Courier New', Courier, monospace;
-  margin-bottom: 10px;
-}
+  // Append the link to the page
+  document.body.appendChild(link);
 
-button {
-  background-color: #4CAF50;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-}
+  // Trigger a click event to initiate the download
+  link.click();
 
-button:hover {
-  background-color: #45a049;
-}
+  // Remove the temporary link from the page
+  document.body.removeChild(link);
+});
 
-/* Dark mode toggle switch styles */
-.toggle-label {
-  position: relative;
-  margin-top: 15px;
-  display: inline-block;
-  cursor: pointer;
-}
-
-.toggle-label input {
-  display: none;
-}
-
-.toggle-switch {
-  width: 40px;
-  height: 20px;
-  background-color: #555;
-  border-radius: 20px;
-  position: relative;
-  transition: background-color 0.3s ease;
-}
-
-.toggle-switch::before {
-  content: '';
-  position: absolute;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  top: 1px;
-  left: 1px;
-  background-color: #000;
-  transition: transform 0.3s ease;
-}
-
-input:checked + .toggle-switch {
-  background-color: #555;
-}
-
-input:checked + .toggle-switch::before {
-  transform: translateX(20px);
-}
+document.getElementById("dark-mode-toggle").addEventListener("change", function() {
+  document.body.classList.toggle("dark-mode");
+});
